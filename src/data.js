@@ -7,9 +7,11 @@ const Data = {};
 Data.addUser = async (req, res, next) => {
   try {
     const data = req.body;
-    const user = new UserModel(data);
-    await user.save();
-    res.status(200).json(item);
+    // const user = new UserModel(data);
+    // await user.save();
+    await UserModel.create(data);
+
+    res.status(200).json(data);
   } catch (e) {
     next(e.message);
   }
