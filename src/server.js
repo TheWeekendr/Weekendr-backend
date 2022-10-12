@@ -23,8 +23,10 @@ const User = require('./models/users.js');
 
 app.get('/users', Data.getAllUsers);
 app.get('/user/:id', Data.getOneUser);
+app.get('/user-name/:name', Data.getOneUserByName);
 app.post('/user', Data.addUser);
 app.delete('/user/:id', Data.deleteUser);
+app.put('/user/:id', Data.updateUser);
 
 app.get('/', (req, res) => {
   res.status(200).send('Welcome!');

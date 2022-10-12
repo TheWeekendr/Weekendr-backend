@@ -17,6 +17,21 @@ Data.addUser = async (req, res, next) => {
   }
 };
 
+Data.updateUser = async (req, res, next) => {
+  try {
+    const data = req.body;
+    const id = req.params.id;
+    const options = {
+      new: true,
+      overwrite: true,
+    };
+    const updatedUser = await UserModel.findByIdAndUpdate(id, data, options);
+    res.status(201).json(updatedUser);
+  } catch (e) {
+    next(e.message);
+  }
+};
+
 Data.getAllUsers = async (req, res) => {
   const users = await UserModel.find({});
   res.status(200).json(users);
@@ -26,6 +41,12 @@ Data.getOneUser = async (req, res) => {
   const id = req.params.id;
   const users = await UserModel.find({ _id: id });
   res.status(200).json(users[0]);
+};
+
+Data.getOneUserByName = async (req, res) => {
+  const name = req.params.name;
+  const user = await UserModel.find({ name: name });
+  res.status(200).json(user);
 };
 
 Data.deleteUser = async (req, res, next) => {
