@@ -1,6 +1,9 @@
 'use strict';
 
+require('dotenv').config();
+const axios = require('axios');
 const UserModel = require('./models/users.js');
+const cache = require('./cache.js');
 
 const Data = {};
 
@@ -43,10 +46,14 @@ Data.getOneUser = async (req, res) => {
   res.status(200).json(users[0]);
 };
 
-Data.getOneUserByName = async (req, res) => {
-  const name = req.params.name;
-  const user = await UserModel.find({ name: name });
-  res.status(200).json(user);
+Data.getOneUserByName = async (req, res, next) => {
+  try {
+    const name = req.params.name;
+    const user = await UserModel.find({ name: name });
+    res.status(200).json(user);
+  } catch (e) {
+    next(e.message);
+  }
 };
 
 Data.deleteUser = async (req, res, next) => {
@@ -59,13 +66,38 @@ Data.deleteUser = async (req, res, next) => {
   }
 };
 
-Data.seed = async () => {
-  console.log('seeding users...');
-  await UserModel.create({
-    name: 'Bob',
-    zipCode: '55555',
-    favFoods: ['chinese', 'italian'],
-  });
+Data.getGoogleEvents = async (req, res, next) => {
+  try {
+    const key = `google-events-${req.query.searchQuery}--${req.query.location}`;
+
+    if (cache[key] && Date.now() - cache[key].timeStamp < 84400000) {
+      res.status(200).json(cache[key].data);
+      console.log('Cache hit!');
+    } else {
+      console.log('Cache miss!');
+
+      const searchQuery = req.query.searchQuery;
+      const location = req.query.location;
+      const url = `${process.env.SERPAPI_URL}/search`;
+      const options = {
+        engine: 'google_events',
+        api_key: process.env.SERPAPI_KEY,
+        q: searchQuery,
+        location: location,
+        htichips: 'date:week,date:next_week',
+      };
+
+      const googleData = await axios.get(url, { params: options });
+      res.status(200).json(googleData.data);
+
+      cache[key] = {
+        timeStamp: Date.now(),
+        data: googleData.data,
+      };
+    }
+  } catch (e) {
+    next(e.message);
+  }
 };
 
 module.exports = Data;
