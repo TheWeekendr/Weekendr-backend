@@ -70,7 +70,7 @@ Data.getGoogleEvents = async (req, res, next) => {
   try {
     const key = `google-events-${req.query.searchQuery}--${req.query.location}`;
 
-    if (cache[key] && Date.now() - cache[key].timeStamp < 84400000) {
+    if (cache[key] && Date.now() - cache[key].timeStamp < 86400000) {
       res.status(200).json(cache[key].data);
       console.log('Cache hit!');
     } else {
