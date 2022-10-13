@@ -46,10 +46,10 @@ Data.getOneUser = async (req, res) => {
   res.status(200).json(users[0]);
 };
 
-Data.getOneUserByName = async (req, res, next) => {
+Data.getOneUserByUserSub = async (req, res, next) => {
   try {
-    const name = req.params.name;
-    const user = await UserModel.find({ name: name });
+    const userSub = req.params.userSub;
+    const user = await UserModel.find({ userSub: userSub });
     res.status(200).json(user);
   } catch (e) {
     next(e.message);
@@ -57,9 +57,9 @@ Data.getOneUserByName = async (req, res, next) => {
 };
 
 Data.deleteUser = async (req, res, next) => {
-  const id = req.params.id;
+  const userSub = req.params.userSub;
   try {
-    await UserModel.findByIdAndDelete(id);
+    await UserModel.deleteOne({ userSub: userSub });
     res.status(200).send('User account deleted');
   } catch (e) {
     next(e.message);

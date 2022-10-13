@@ -23,9 +23,9 @@ const User = require('./models/users.js');
 
 app.get('/users', Data.getAllUsers);
 app.get('/user/:id', Data.getOneUser);
-app.get('/user-name/:name', Data.getOneUserByName);
+app.get('/user-sub/:userSub', Data.getOneUserByUserSub);
 app.post('/user', Data.addUser);
-app.delete('/user/:id', Data.deleteUser);
+app.delete('/user/:userSub', Data.deleteUser);
 app.put('/user/:id', Data.updateUser);
 
 app.get('/google-events', Data.getGoogleEvents);
