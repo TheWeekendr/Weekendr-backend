@@ -150,6 +150,7 @@ Data.getWeather = async (req, res, next) => {
         postal_code: location,
         days: '10',
         country: 'US',
+        units: 'I',
       };
 
       const weatherData = await axios.get(url, { params: options });
