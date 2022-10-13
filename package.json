@@ -25,6 +25,5 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.1.5",
     "mongoose": "^6.6.5"
-  },
-  "devDependencies": {}
+  }
 }
