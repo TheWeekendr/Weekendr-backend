@@ -100,4 +100,69 @@ Data.getGoogleEvents = async (req, res, next) => {
   }
 };
 
+Data.getYelpRestaurants = async (req, res, next) => {
+  try {
+    const key = `yelp-restaurants-${req.query.searchQuery}--${req.query.location}`;
+
+    if (cache[key] && Date.now() - cache[key].timeStamp < 86400000) {
+      res.status(200).json(cache[key].data);
+      console.log('Cache hit!');
+    } else {
+      console.log('Cache miss!');
+
+      const searchQuery = req.query.searchQuery;
+      const location = req.query.location;
+      const url = `${process.env.SERPAPI_URL}/search`;
+      const options = {
+        engine: 'yelp',
+        api_key: process.env.SERPAPI_KEY,
+        find_desc: searchQuery,
+        find_loc: location,
+      };
+
+      const yelpData = await axios.get(url, { params: options });
+      res.status(200).json(yelpData.data);
+
+      cache[key] = {
+        timeStamp: Date.now(),
+        data: yelpData.data,
+      };
+    }
+  } catch (e) {
+    next(e.message);
+  }
+};
+
+Data.getWeather = async (req, res, next) => {
+  try {
+    const key = `weather-${req.query.location}`;
+
+    if (cache[key] && Date.now() - cache[key].timeStamp < 3600000) {
+      res.status(200).json(cache[key].data);
+      console.log('Cache hit!');
+    } else {
+      console.log('Cache miss!');
+
+      const location = req.query.location;
+      const url = `${process.env.WEATHERBIT_URL}/forecast/daily`;
+      const options = {
+        key: process.env.WEATHERBIT_KEY,
+        postal_code: location,
+        days: '10',
+        country: 'US',
+      };
+
+      const weatherData = await axios.get(url, { params: options });
+      res.status(200).json(weatherData.data);
+
+      cache[key] = {
+        timeStamp: Date.now(),
+        data: weatherData.data,
+      };
+    }
+  } catch (e) {
+    next(e.message);
+  }
+};
+
 module.exports = Data;

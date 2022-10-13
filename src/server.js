@@ -29,6 +29,8 @@ app.delete('/user/:userSub', Data.deleteUser);
 app.put('/user/:id', Data.updateUser);
 
 app.get('/google-events', Data.getGoogleEvents);
+app.get('/yelp-restaurants', Data.getYelpRestaurants);
+app.get('/weather', Data.getWeather);
 
 app.get('/', (req, res) => {
   res.status(200).send('Welcome!');
