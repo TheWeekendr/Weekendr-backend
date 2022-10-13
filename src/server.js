@@ -28,6 +28,8 @@ app.post('/user', Data.addUser);
 app.delete('/user/:id', Data.deleteUser);
 app.put('/user/:id', Data.updateUser);
 
+app.get('/google-events', Data.getGoogleEvents);
+
 app.get('/', (req, res) => {
   res.status(200).send('Welcome!');
 });

@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+<<<<<<< HEAD
+=======
+package-lock.json
+package.json
+.gitignore
+>>>>>>> 53024ccd93d44342792d1065fcbb9c4eb7b8c80d
